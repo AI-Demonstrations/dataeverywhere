@@ -1,0 +1,12 @@
+﻿//Alex funds
+match(m:Finance) -- (p:Person {name:"Alex"}) match(m) -[:funds] - (f) return m, p, f
+
+
+//Alex Johnson Event
+MATCH (p:Person {name: 'Alex Johnson'})--(n:Message {id:32}) --(l:Location) return p,n, l
+
+//Alex Johnson Itinerary
+MATCH (p:Person {name: 'Alex Johnson'})--(n:Message ) --(l:Location) return p.name as Person, l.name as Location
+
+match(mf:Message) -- (p:Person {name:"Alex"}) where mf.id < 10 OR mf.id > 1000 AND mf.id <1010 return mf
+
