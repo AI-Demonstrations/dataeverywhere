@@ -1,0 +1,226 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 770" width="1200" height="770" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect width="1200" height="770" fill="#ffffff"/>
+
+  <text x="600" y="42" text-anchor="middle" font-size="25" font-weight="700" fill="#0f172a">EAMCC pipeline: from messages to events</text>
+  <text x="600" y="70" text-anchor="middle" font-size="14.5" fill="#475569">Synthetic SMS and email are generated, classified, mined for entities, and linked in a graph you can query for events.</text>
+
+  <!-- Flow arrows between cards -->
+  <g stroke="#475569" stroke-width="2.5" marker-end="url(#arrow)">
+    <line x1="237" y1="135" x2="255" y2="135"/>
+    <line x1="471" y1="135" x2="489" y2="135"/>
+    <line x1="705" y1="135" x2="723" y2="135"/>
+    <line x1="939" y1="135" x2="957" y2="135"/>
+  </g>
+
+  <!-- STEP 1: Generate -->
+  <g>
+    <rect x="24" y="96" width="212" height="384" rx="12" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+    <path d="M24,108 a12,12 0 0 1 12,-12 h188 a12,12 0 0 1 12,12 v50 h-212 z" fill="#2563eb"/>
+    <text x="38" y="120" font-size="12" font-weight="700" fill="#dbeafe">STEP 1</text>
+    <text x="38" y="145" font-size="19" font-weight="700" fill="#ffffff">Generate</text>
+    <rect x="38" y="170" width="184" height="24" rx="12" fill="#ffffff" stroke="#93c5fd"/>
+    <text x="130" y="186" text-anchor="middle" font-size="12" font-weight="700" fill="#1e3a8a">OpenAI GPT-4o</text>
+    <g font-size="12.5" fill="#1e293b">
+      <text x="38" y="220">• Prompts write realistic</text>
+      <text x="48" y="237">SMS and email messages</text>
+      <text x="38" y="258">• Three kinds: travel,</text>
+      <text x="48" y="275">finance, other (offers)</text>
+      <text x="38" y="296">• 1,000 per channel</text>
+      <text x="38" y="317">• The prompt used is saved</text>
+      <text x="48" y="334">as ground truth <tspan font-family="monospace">type</tspan>:</text>
+      <text x="48" y="351">0 other · 1 travel · 2 finance</text>
+    </g>
+    <line x1="38" y1="420" x2="222" y2="420" stroke="#bfdbfe"/>
+    <g font-size="11" font-family="monospace" fill="#1e3a8a">
+      <text x="38" y="440">GenerateStoreSMS.ipynb</text>
+      <text x="38" y="458">GenerateStoreEmails.ipynb</text>
+    </g>
+  </g>
+
+  <!-- STEP 2: Classify -->
+  <g>
+    <rect x="258" y="96" width="212" height="384" rx="12" fill="#f0fdfa" stroke="#0d9488" stroke-width="2"/>
+    <path d="M258,108 a12,12 0 0 1 12,-12 h188 a12,12 0 0 1 12,12 v50 h-212 z" fill="#0d9488"/>
+    <text x="272" y="120" font-size="12" font-weight="700" fill="#ccfbf1">STEP 2</text>
+    <text x="272" y="145" font-size="19" font-weight="700" fill="#ffffff">Classify</text>
+    <rect x="272" y="170" width="184" height="24" rx="12" fill="#ffffff" stroke="#5eead4"/>
+    <text x="364" y="186" text-anchor="middle" font-size="12" font-weight="700" fill="#134e4a">HF zero-shot classifier</text>
+    <g font-size="12.5" fill="#1e293b">
+      <text x="272" y="220">• Labels: other, travel,</text>
+      <text x="282" y="237">money ("money" scored far</text>
+      <text x="282" y="254">better than "finance")</text>
+      <text x="272" y="275">• Top score ≥ 0.50 → <tspan font-family="monospace">predict</tspan></text>
+      <text x="282" y="292">= 0, 1 or 2</text>
+      <text x="272" y="313">• Below 0.50 → 9 (unknown),</text>
+      <text x="282" y="330">unless top label is "other"</text>
+      <text x="272" y="351">• Compares <tspan font-family="monospace">predict</tspan> with</text>
+      <text x="282" y="368"><tspan font-family="monospace">type</tspan> for per-class recall</text>
+    </g>
+    <line x1="272" y1="420" x2="456" y2="420" stroke="#99f6e4"/>
+    <g font-size="11" font-family="monospace" fill="#134e4a">
+      <text x="272" y="440">GenerateLabels.ipynb</text>
+      <text x="272" y="458">GenerateLabelsEmails.ipynb</text>
+    </g>
+  </g>
+
+  <!-- STEP 3: Extract -->
+  <g>
+    <rect x="492" y="96" width="212" height="384" rx="12" fill="#fffbeb" stroke="#d97706" stroke-width="2"/>
+    <path d="M492,108 a12,12 0 0 1 12,-12 h188 a12,12 0 0 1 12,12 v50 h-212 z" fill="#d97706"/>
+    <text x="506" y="120" font-size="12" font-weight="700" fill="#fef3c7">STEP 3</text>
+    <text x="506" y="145" font-size="19" font-weight="700" fill="#ffffff">Extract entities</text>
+    <rect x="506" y="170" width="184" height="24" rx="12" fill="#ffffff" stroke="#fcd34d"/>
+    <text x="598" y="186" text-anchor="middle" font-size="12" font-weight="700" fill="#78350f">HF NER + regex</text>
+    <g font-size="12.5" fill="#1e293b">
+      <text x="506" y="220">• Keeps messages where</text>
+      <text x="516" y="237"><tspan font-family="monospace">type</tspan> = <tspan font-family="monospace">predict</tspan> (travel,</text>
+      <text x="516" y="254">finance)</text>
+      <text x="506" y="275">• NER finds Person, Location,</text>
+      <text x="516" y="292">Organization; drops</text>
+      <text x="516" y="309">scores below 0.70</text>
+      <text x="506" y="330">• Regex reads sender and</text>
+      <text x="516" y="347">receiver from **From/To**</text>
+      <text x="506" y="368">• Regex finds $ amounts</text>
+      <text x="516" y="385">in finance messages</text>
+    </g>
+    <line x1="506" y1="420" x2="690" y2="420" stroke="#fde68a"/>
+    <g font-size="11" font-family="monospace" fill="#78350f">
+      <text x="506" y="440">GenerateEntities.ipynb</text>
+      <text x="506" y="458">GenerateEntities-Finance</text>
+    </g>
+  </g>
+
+  <!-- STEP 4: Build graph -->
+  <g>
+    <rect x="726" y="96" width="212" height="384" rx="12" fill="#faf5ff" stroke="#9333ea" stroke-width="2"/>
+    <path d="M726,108 a12,12 0 0 1 12,-12 h188 a12,12 0 0 1 12,12 v50 h-212 z" fill="#9333ea"/>
+    <text x="740" y="120" font-size="12" font-weight="700" fill="#f3e8ff">STEP 4</text>
+    <text x="740" y="145" font-size="19" font-weight="700" fill="#ffffff">Build the graph</text>
+    <rect x="740" y="170" width="184" height="24" rx="12" fill="#ffffff" stroke="#d8b4fe"/>
+    <text x="832" y="186" text-anchor="middle" font-size="12" font-weight="700" fill="#581c87">Neo4j via py2neo</text>
+    <g font-size="12.5" fill="#1e293b">
+      <text x="740" y="220">• MERGE one Message node</text>
+      <text x="750" y="237">per message, labelled</text>
+      <text x="750" y="254">Travel or Finance, SMS</text>
+      <text x="740" y="275">• MERGE entity nodes:</text>
+      <text x="750" y="292">Person, Location,</text>
+      <text x="750" y="309">Organization, Money</text>
+      <text x="740" y="330">• Connect them with dated</text>
+      <text x="750" y="347">edges: at, with, funds,</text>
+      <text x="750" y="364">related, associated, and</text>
+      <text x="750" y="381">from / to for senders</text>
+    </g>
+    <line x1="740" y1="420" x2="924" y2="420" stroke="#e9d5ff"/>
+    <g font-size="11" font-family="monospace" fill="#581c87">
+      <text x="740" y="440">(same notebooks as</text>
+      <text x="740" y="458"> step 3)</text>
+    </g>
+  </g>
+
+  <!-- STEP 5: Query events -->
+  <g>
+    <rect x="960" y="96" width="212" height="384" rx="12" fill="#fff1f2" stroke="#e11d48" stroke-width="2"/>
+    <path d="M960,108 a12,12 0 0 1 12,-12 h188 a12,12 0 0 1 12,12 v50 h-212 z" fill="#e11d48"/>
+    <text x="974" y="120" font-size="12" font-weight="700" fill="#ffe4e6">STEP 5</text>
+    <text x="974" y="145" font-size="19" font-weight="700" fill="#ffffff">Query for events</text>
+    <rect x="974" y="170" width="184" height="24" rx="12" fill="#ffffff" stroke="#fda4af"/>
+    <text x="1066" y="186" text-anchor="middle" font-size="12" font-weight="700" fill="#881337">Cypher queries</text>
+    <g font-size="12.5" fill="#1e293b">
+      <text x="974" y="220">• An event is a path:</text>
+      <text x="984" y="237">Person – Message –</text>
+      <text x="984" y="254">Location / Money</text>
+      <text x="974" y="275">• "Where has Alex Johnson</text>
+      <text x="984" y="292">been?" gives an itinerary</text>
+      <text x="974" y="313">• "What did Alex fund?"</text>
+      <text x="984" y="330">follows funds edges</text>
+      <text x="974" y="351">• SMS and email facts about</text>
+      <text x="984" y="368">one person join up in a</text>
+      <text x="984" y="385">single graph</text>
+    </g>
+    <line x1="974" y1="420" x2="1158" y2="420" stroke="#fecdd3"/>
+    <g font-size="11" font-family="monospace" fill="#881337">
+      <text x="974" y="440">neoqueries.txt</text>
+    </g>
+  </g>
+
+  <!-- Card-to-store arrows -->
+  <g stroke="#64748b" stroke-width="2" marker-end="url(#arrow)">
+    <line x1="130" y1="482" x2="130" y2="534"/>
+    <line x1="352" y1="534" x2="352" y2="484"/>
+    <line x1="376" y1="482" x2="376" y2="534"/>
+    <line x1="598" y1="534" x2="598" y2="484"/>
+    <line x1="832" y1="482" x2="832" y2="534"/>
+    <line x1="1066" y1="534" x2="1066" y2="484"/>
+  </g>
+  <g font-size="11.5" font-weight="700" fill="#475569">
+    <text x="138" y="512">insert</text>
+    <text x="384" y="505">read, then</text>
+    <text x="384" y="520">set predict</text>
+    <text x="606" y="512">read matches</text>
+    <text x="840" y="512">MERGE</text>
+    <text x="1074" y="512">MATCH</text>
+  </g>
+
+  <!-- MongoDB store -->
+  <g>
+    <rect x="24" y="538" width="680" height="168" rx="12" fill="#f8fafc" stroke="#64748b" stroke-width="2" stroke-dasharray="6 4"/>
+    <ellipse cx="66" cy="572" rx="22" ry="7" fill="#e2e8f0" stroke="#64748b" stroke-width="1.5"/>
+    <path d="M44,572 v26 a22,7 0 0 0 44,0 v-26" fill="#e2e8f0" stroke="#64748b" stroke-width="1.5"/>
+    <text x="102" y="572" font-size="17" font-weight="700" fill="#0f172a">MongoDB</text>
+    <text x="102" y="592" font-size="13" fill="#334155">database <tspan font-family="monospace">messages</tspan> · one document per message</text>
+    <g font-size="12.5" fill="#1e293b">
+      <text x="44" y="630" font-weight="700">Collections</text>
+      <text x="44" y="650" font-family="monospace">smsmessages</text>
+      <text x="44" y="668" font-family="monospace">emailmessages</text>
+      <text x="250" y="630" font-weight="700">Each document</text>
+      <rect x="250" y="640" width="430" height="50" rx="6" fill="#ffffff" stroke="#cbd5e1"/>
+      <text x="262" y="660" font-family="monospace" font-size="12.5">{ message: "Hi Dana, your flight ...",</text>
+      <text x="262" y="679" font-family="monospace" font-size="12.5">  type: 1,  predict: 1 }</text>
+    </g>
+    <text x="680" y="630" font-size="11" fill="#64748b" text-anchor="end">type from step 1 · predict from step 2</text>
+  </g>
+
+  <!-- Neo4j store -->
+  <g>
+    <rect x="726" y="538" width="446" height="168" rx="12" fill="#f8fafc" stroke="#64748b" stroke-width="2" stroke-dasharray="6 4"/>
+    <text x="746" y="572" font-size="17" font-weight="700" fill="#0f172a">Neo4j graph</text>
+    <g font-size="12.5" fill="#1e293b">
+      <text x="746" y="598">Messages become hubs;</text>
+      <text x="746" y="616">the entities they mention</text>
+      <text x="746" y="634">hang off them, so shared</text>
+      <text x="746" y="652">people and places link</text>
+      <text x="746" y="670">messages together.</text>
+    </g>
+    <!-- mini graph -->
+    <g stroke="#94a3b8" stroke-width="1.8">
+      <line x1="1050" y1="622" x2="980" y2="582"/>
+      <line x1="1050" y1="622" x2="1128" y2="580"/>
+      <line x1="1050" y1="622" x2="1132" y2="672"/>
+      <line x1="1050" y1="622" x2="978" y2="676"/>
+    </g>
+    <g font-size="10" fill="#475569" font-style="italic">
+      <text x="1000" y="595">from</text>
+      <text x="1085" y="590">at</text>
+      <text x="1090" y="660">funds</text>
+      <text x="972" y="650">associated</text>
+    </g>
+    <circle cx="1050" cy="622" r="24" fill="#9333ea"/>
+    <text x="1050" y="626" text-anchor="middle" font-size="10.5" font-weight="700" fill="#ffffff">Message</text>
+    <circle cx="980" cy="582" r="18" fill="#2563eb"/>
+    <text x="980" y="586" text-anchor="middle" font-size="10" font-weight="700" fill="#ffffff">Alex</text>
+    <circle cx="1128" cy="580" r="18" fill="#0d9488"/>
+    <text x="1128" y="584" text-anchor="middle" font-size="9.5" font-weight="700" fill="#ffffff">Paris</text>
+    <circle cx="1132" cy="672" r="18" fill="#16a34a"/>
+    <text x="1132" y="676" text-anchor="middle" font-size="9.5" font-weight="700" fill="#ffffff">$250</text>
+    <circle cx="978" cy="676" r="18" fill="#d97706"/>
+    <text x="978" y="680" text-anchor="middle" font-size="9.5" font-weight="700" fill="#ffffff">Bank</text>
+  </g>
+
+  <text x="600" y="742" text-anchor="middle" font-size="13.5" font-style="italic" fill="#475569">Several models in a chain: a generative LLM makes the data, a zero-shot classifier routes it, NER pulls out the who and where, and the graph ties it into events.</text>
+</svg>
